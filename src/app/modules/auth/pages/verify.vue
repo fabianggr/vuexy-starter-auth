@@ -21,18 +21,17 @@ const onFinish = async () => {
   isOtpInserted.value = true
 
   try {
+
     const result = await authService.verify(otp.value)
 
     console.log('[VERIFY RESULT]', result)
 
-    // TODO: aquí luego:
-    // - guardar token en cookies / pinia
-    // - guardar datos de usuario
-    // - usar la ruta real de dashboard (ej: '/app')
-    router.push('/')
+    // TODO: cuando el backend también envíe userData y abilityRules,
+    // aquí guardaremos todo eso antes del redirect.
+    router.push('/app')
   } catch (error) {
     console.error('[VERIFY ERROR]', error)
-    // TODO: mostrar mensaje amigable en la UI
+    // TODO: mostrar mensaje amigable si el código es incorrecto o expiró
   } finally {
     isOtpInserted.value = false
   }

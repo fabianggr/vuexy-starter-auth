@@ -45,8 +45,6 @@ const credentials = ref({
 
 const rememberMe = ref(false)
 
-// ⛓️ En este paso AÚN NO hay conexión a backend.
-// Aquí luego llamaremos a authService.login(credentials.value)
 
 const onSubmit = async () => {
 
@@ -69,9 +67,15 @@ const onSubmit = async () => {
       return
     }
 
+    // Si en el futuro hay flujo sin 2FA:
+    // router.push('/app')
+
   } catch (error) {
     console.error('[LOGIN ERROR]', error)
-    // TODO: mostrar mensaje amigable en la UI
+    // Por ahora solo mostramos en consola.
+    // Luego podemos mapear error.backend.errors.email/password a `errors.value`.
+    // errors.value.email = ...
+    // errors.value.password = ...
   }
 
 }

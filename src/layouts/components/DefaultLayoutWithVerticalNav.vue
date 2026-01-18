@@ -5,7 +5,11 @@ import { themeConfig } from '@themeConfig'
 // Components
 import Footer from '@/layouts/components/Footer.vue'
 import NavbarThemeSwitcher from '@/layouts/components/NavbarThemeSwitcher.vue'
-import UserProfile from '@/layouts/components/UserProfile.vue'
+
+// import UserProfile from '@/layouts/components/UserProfile.vue'
+// [PERSONALIZACION-FG] usar componente propio basado en UserProfile
+import AppUserMenu from "@/app/modules/auth/components/AppUserMenu.vue"
+
 import NavBarI18n from '@core/components/I18n.vue'
 
 // @layouts plugin
@@ -36,7 +40,8 @@ import { VerticalNavLayout } from '@layouts'
           v-if="themeConfig.app.i18n.enable && themeConfig.app.i18n.langConfig?.length"
           :languages="themeConfig.app.i18n.langConfig"
         />
-        <UserProfile />
+        <!-- [PERSONALIZACION-FG] componente propio  -->
+        <AppUserMenu/>
       </div>
     </template>
 
