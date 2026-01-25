@@ -25,10 +25,13 @@ import { useSessionStore } from '@/app/modules/auth/store/sessionStore'
 const router = useRouter()
 const sessionStore = useSessionStore()
 
-// [PERSONALIZACION-FG] Placeholder de identidad (por ahora).
-// Más adelante: sessionStore.user / userStore con datos reales.
-const displayName = computed(() => 'Usuario')
-const displayRole = computed(() => 'Sesión activa')
+// Nombre y rol a partir del perfil cargado desde backend.
+// No persistimos userData en localStorage: se rehidrata vía /users/me.
+const displayName = computed(() => sessionStore.user?.name || 'Usuario')
+
+// Si el usuario tiene varios roles, por ahora mostramos el primero.
+// Más adelante podremos decidir “rol activo”.
+const displayRole = computed(() => sessionStore.user?.roles?.[0]?.name || '—')
 
 // [PERSONALIZACION-FG] Logout real: API + limpieza local + redirección.
 // - Se usa router.replace para evitar volver atrás con el botón "Back".

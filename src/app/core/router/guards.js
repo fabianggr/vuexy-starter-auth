@@ -29,33 +29,49 @@ const APP_HOME_ROUTE = '/app'
  * @param {import('vue-router').Router} router
  */
 export function setupAppGuards(router) {
-  router.beforeEach(to => {
+  router.beforeEach(async to => {
 
     // [PERSONALIZACION-FG] Sesión actual (fuente única)
     const sessionStore = useSessionStore()
     sessionStore.load()
+
+
     const isLoggedIn = Boolean(sessionStore.token)
 
-    console.log("access_token", isLoggedIn)
+    if (import.meta.env.DEV)
+      console.log('[GUARD] sesión activa:', isLoggedIn)
 
     const isRootRoute = to.path === '/'
     const isAuthRoute = to.path.startsWith('/app/auth')
     const isPrivateRoute = to.path.startsWith('/app')
 
-    // [PERSONALIZACION-FG] App privada: nunca mostrar "/" (demo/landing)
+    // App privada: nunca mostrar "/" (demo/landing)
     if (isRootRoute) {
       return isLoggedIn ? APP_HOME_ROUTE : LOGIN_ROUTE
     }
 
-    // [PERSONALIZACION-FG] Si ya está logueado, evitar volver a login/verify
+    // Si ya está logueado, evitar volver a login/verify
     if (isAuthRoute && isLoggedIn) {
       return APP_HOME_ROUTE
     }
 
-    // [PERSONALIZACION-FG] Proteger todo /app excepto /app/auth
+    // Proteger /app excepto /app/auth
     if (isPrivateRoute && !isAuthRoute && !isLoggedIn) {
       return LOGIN_ROUTE
     }
+
+    // si está logueado y entra a zona privada,
+    // cargamos userData real una sola vez (Pinia).
+    if (isPrivateRoute && isLoggedIn) {
+      try {
+        await sessionStore.loadUserProfile()
+      } catch (e) {
+        // Si el token expiró y el store lo limpió, redirigir a login
+        if (!sessionStore.token)
+          return LOGIN_ROUTE
+      }
+    }
+
 
     return true
 

@@ -19,6 +19,15 @@ const LOGOUT_ENDPOINT = '/v1/auth/logout'
 export const authService = {
 
   /**
+   * Perfil del usuario autenticado.
+   */
+  async me() {
+    const response = await apiClient.get('/v1/users/me')
+    return response.data?.data
+  },
+
+
+  /**
    * Paso 1: Login
    * Llama a POST /api/v1/auth/login con { email, password }.
    * Si todo va bien, el backend envía el código 2FA por correo y responde { two_factor: true }.
